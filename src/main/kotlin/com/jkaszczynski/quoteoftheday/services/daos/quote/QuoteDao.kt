@@ -1,10 +1,11 @@
 package com.jkaszczynski.quoteoftheday.services.daos.quote
 
-import com.jkaszczynski.quoteoftheday.dtos.dtos.QuoteDto
+import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.entities.Quote
 import com.jkaszczynski.quoteoftheday.services.daos.Dao
 import org.springframework.stereotype.Service
 import org.springframework.util.Assert
+import java.time.LocalDate
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.transaction.Transactional
@@ -14,9 +15,9 @@ import javax.transaction.Transactional
 class QuoteDao(
         @PersistenceContext
         val entityManager: EntityManager
-) : Dao<QuoteDto, Long> {
+) : Dao<QuoteBasicInfo, Long> {
 
-    override fun get(id: Long): QuoteDto {
+    override fun get(id: Long): QuoteBasicInfo {
         val quote = getQuote(id)
         return asDto(quote)
     }
@@ -25,13 +26,20 @@ class QuoteDao(
         return entityManager.find(Quote::class.java, id)
     }
 
-    private fun asDto(quote: Quote): QuoteDto {
-        val quoteDto = QuoteDto(quote.quote)
-        quoteDto.id = quote.id
-        return quoteDto
+    private fun asDto(quote: Quote): QuoteBasicInfo {
+        val quoteBasicInfo = QuoteBasicInfo(quote.quote)
+        quoteBasicInfo.id = quote.id
+        return quoteBasicInfo
     }
 
-    override fun save(entity: QuoteDto) {
+    fun getByDisplayDate(date: LocalDate): List<QuoteBasicInfo> {
+        val query = entityManager.createNamedQuery("Quote.getByDisplayDate", QuoteBasicInfo::class.java)
+        query.setParameter("date", date)
+
+        return query.resultList
+    }
+
+    override fun save(entity: QuoteBasicInfo) {
         Assert.hasText(entity.quote, "Cannot persist quote with no text")
         val newQuote = Quote(entity.quote)
         entityManager.persist(newQuote)
@@ -42,7 +50,7 @@ class QuoteDao(
         entityManager.remove(quote)
     }
 
-    override fun update(entity: QuoteDto) {
+    override fun update(entity: QuoteBasicInfo) {
         Assert.hasText(entity.quote, "Cannot update quote if no text was provided")
         val quote = getQuote(entity.id)
         quote.quote = entity.quote

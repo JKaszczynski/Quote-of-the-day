@@ -1,8 +1,8 @@
-package com.jkaszczynski.quoteoftheday.dtos.dtos
+package com.jkaszczynski.quoteoftheday.dtos
 
 import javax.validation.constraints.NotEmpty
 
-class QuoteDto(
+class QuoteBasicInfo(
         @NotEmpty
         var quote: String
 ) {

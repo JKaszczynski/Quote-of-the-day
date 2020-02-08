@@ -1,6 +1,6 @@
 package com.jkaszczynski.quoteoftheday
 
-import com.jkaszczynski.quoteoftheday.dtos.dtos.QuoteDto
+import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.lang.IllegalStateException
+import java.time.LocalDate
 
 @SpringBootTest
 class QuoteDaoTests(
@@ -19,8 +20,8 @@ class QuoteDaoTests(
 
     @BeforeEach
     fun persistQuote() {
-        val quote = QuoteDto(quoteText)
-        quoteDao.save(quote)
+        val quoteBasicInfo = QuoteBasicInfo(quoteText)
+        quoteDao.save(quoteBasicInfo)
     }
 
     @Test
@@ -31,12 +32,12 @@ class QuoteDaoTests(
 
     @Test
     fun givenQuote_whenUpdated_thenSuccessfullyUpdated() {
-        val quoteText = "differentQuote"
-        val quote = QuoteDto(quoteText)
-        quote.id = quoteId
-        quoteDao.update(quote)
+        val differentQuoteText = "differentQuote"
+        val quoteBasicInfo = QuoteBasicInfo(differentQuoteText)
+        quoteBasicInfo.id = quoteId
+        quoteDao.update(quoteBasicInfo)
         val updated = quoteDao.get(quoteId)
-        Assertions.assertThat(updated.quote).isEqualTo(quoteText)
+        Assertions.assertThat(updated.quote).isEqualTo(differentQuoteText)
     }
 
     @Test
@@ -45,5 +46,11 @@ class QuoteDaoTests(
         Assertions.assertThatThrownBy { quoteDao.get(quoteId) }
                 .isInstanceOf(IllegalStateException::class.java)
                 .hasMessageContaining("null")
+    }
+
+    @Test
+    fun givenQuoteWithoutDisplayedDate_whenSearchByDate_thenNotFound() {
+        val quoteBasicInfo = quoteDao.getByDisplayDate(LocalDate.now())
+        Assertions.assertThat(quoteBasicInfo.size).isEqualTo(0)
     }
 }

@@ -7,6 +7,10 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity(name = "Quotes")
+@NamedQueries(
+        NamedQuery(name = "Quote.getByDisplayDate",
+                query = "SELECT new com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo(q.quote) FROM Quotes q WHERE q.displayedDate = :date")
+)
 data class Quote(
         @Column(nullable = false)
         var quote: String = "") {
