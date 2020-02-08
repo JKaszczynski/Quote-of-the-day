@@ -27,10 +27,13 @@ class QuoteService(
 
     private fun getNewQuote(): QuoteBasicInfo {
         val quotesNeverDisplayed = quoteDao.getNotDisplayed()
-        return if (quotesNeverDisplayed.isNotEmpty()) {
+        val quote: QuoteBasicInfo
+        quote = if (quotesNeverDisplayed.isNotEmpty()) {
             quotesNeverDisplayed[0]
         } else {
             quoteDao.getRandom()
         }
+        quoteDao.setDisplayDate(quote)
+        return quote
     }
 }

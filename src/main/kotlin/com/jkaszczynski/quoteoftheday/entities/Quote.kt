@@ -9,9 +9,9 @@ import javax.persistence.*
 @Entity(name = "Quotes")
 @NamedQueries(
         NamedQuery(name = "Quote.getByDisplayDate",
-                query = "SELECT new com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo(q.quote) FROM Quotes q WHERE q.displayedDate = :date"),
+                query = "SELECT new com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo(q.quote, q.id) FROM Quotes q WHERE q.displayedDate = :date"),
         NamedQuery(name = "Quote.getNotDisplayed",
-                query = "SELECT new com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo(q.quote) FROM Quotes q WHERE q.displayedDate IS NULL"),
+                query = "SELECT new com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo(q.quote, q.id) FROM Quotes q WHERE q.displayedDate IS NULL"),
         NamedQuery(name = "Quote.countAll",
                 query = "SELECT COUNT(q) FROM Quotes q")
 )

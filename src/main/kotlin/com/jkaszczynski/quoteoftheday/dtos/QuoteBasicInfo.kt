@@ -7,4 +7,8 @@ class QuoteBasicInfo(
         var quote: String
 ) {
     var id: Long = 0
+
+    constructor(quote: String, id: Long) : this(quote) {
+        this.id = id
+    }
 }

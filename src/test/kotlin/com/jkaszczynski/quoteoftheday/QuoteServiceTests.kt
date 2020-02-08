@@ -26,7 +26,7 @@ class QuoteServiceTests(
     }
 
     private fun insertQuote(id: Long, quote: String, displayedDate: LocalDate?) {
-        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?)", id, null, null, displayedDate, quote)
+        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?)", id, null, displayedDate, null, quote)
     }
 
     fun cleanDatabase() {
