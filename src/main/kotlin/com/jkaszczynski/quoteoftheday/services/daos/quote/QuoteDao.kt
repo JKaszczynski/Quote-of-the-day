@@ -9,6 +9,7 @@ import java.time.LocalDate
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.transaction.Transactional
+import kotlin.random.Random
 
 @Service
 @Transactional
@@ -22,7 +23,7 @@ class QuoteDao(
         return asDto(quote)
     }
 
-    private fun getQuote(id: Long): Quote {
+    fun getQuote(id: Long): Quote {
         return entityManager.find(Quote::class.java, id)
     }
 
@@ -35,8 +36,18 @@ class QuoteDao(
     fun getByDisplayDate(date: LocalDate): List<QuoteBasicInfo> {
         val query = entityManager.createNamedQuery("Quote.getByDisplayDate", QuoteBasicInfo::class.java)
         query.setParameter("date", date)
-
         return query.resultList
+    }
+
+    fun getNotDisplayed(): List<QuoteBasicInfo> {
+        val query = entityManager.createNamedQuery("Quote.getNotDisplayed", QuoteBasicInfo::class.java)
+        return query.resultList
+    }
+
+    fun getRandom(): QuoteBasicInfo {
+        val quotesAmount = entityManager.createNamedQuery("Quote.countAll").singleResult.toString().toLong()
+        val randomQuoteId = Random.nextLong(1, quotesAmount)
+        return asDto(getQuote(randomQuoteId))
     }
 
     override fun save(entity: QuoteBasicInfo) {
@@ -54,6 +65,12 @@ class QuoteDao(
         Assert.hasText(entity.quote, "Cannot update quote if no text was provided")
         val quote = getQuote(entity.id)
         quote.quote = entity.quote
+        entityManager.merge(quote)
+    }
+
+    fun setDisplayDate(entity: QuoteBasicInfo) {
+        val quote = getQuote(entity.id)
+        quote.displayedDate = LocalDate.now()
         entityManager.merge(quote)
     }
 }
