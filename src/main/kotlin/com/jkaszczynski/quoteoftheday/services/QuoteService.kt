@@ -2,16 +2,13 @@ package com.jkaszczynski.quoteoftheday.services
 
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class QuoteService(
-        @Autowired
-        val quoteDao: QuoteDao
+        private val quoteDao: QuoteDao
 ) {
-
     fun getTodayQuote(): String {
         return getQuoteFromDatabase().quote
     }

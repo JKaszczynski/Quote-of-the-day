@@ -1,4 +1,4 @@
-package com.jkaszczynski.quoteoftheday
+package com.jkaszczynski.quoteoftheday.services
 
 import com.jkaszczynski.quoteoftheday.services.QuoteService
 import org.assertj.core.api.Assertions
@@ -13,9 +13,9 @@ import java.time.LocalDate
 @SpringBootTest
 class QuoteServiceTests(
         @Autowired
-        val quoteService: QuoteService,
+        private val quoteService: QuoteService,
         @Autowired
-        val jdbcTemplate: JdbcTemplate) {
+        private val jdbcTemplate: JdbcTemplate) {
 
     private val quoteText = "test"
 

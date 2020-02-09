@@ -1,4 +1,4 @@
-package com.jkaszczynski.quoteoftheday
+package com.jkaszczynski.quoteoftheday.services
 
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
@@ -15,10 +15,10 @@ import java.time.LocalDate
 @SpringBootTest
 class QuoteDaoTests(
         @Autowired
-        val quoteDao: QuoteDao,
+        private val quoteDao: QuoteDao,
 
         @Autowired
-        val jdbcTemplate: JdbcTemplate
+        private val jdbcTemplate: JdbcTemplate
 ) {
     private val quoteText = "test"
     private val quoteId = 1L

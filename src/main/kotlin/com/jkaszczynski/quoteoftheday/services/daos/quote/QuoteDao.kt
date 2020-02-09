@@ -15,7 +15,7 @@ import kotlin.random.Random
 @Transactional
 class QuoteDao(
         @PersistenceContext
-        val entityManager: EntityManager
+        private val entityManager: EntityManager
 ) : Dao<QuoteBasicInfo, Long> {
 
     override fun get(id: Long): QuoteBasicInfo {
