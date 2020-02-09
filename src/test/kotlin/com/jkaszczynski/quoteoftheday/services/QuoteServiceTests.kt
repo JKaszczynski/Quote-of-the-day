@@ -1,12 +1,12 @@
 package com.jkaszczynski.quoteoftheday.services
 
+import com.jkaszczynski.quoteoftheday.clean
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.jdbc.JdbcTestUtils
 import java.time.LocalDate
 
 @SpringBootTest
@@ -20,17 +20,12 @@ class QuoteServiceTests(
 
     @BeforeEach
     fun persistQuote() {
-        cleanDatabase()
+        clean(jdbcTemplate, "Quotes")
         insertQuote(1L, quoteText, null)
     }
 
     private fun insertQuote(id: Long, quote: String, displayedDate: LocalDate?) {
         jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?)", id, null, displayedDate, null, quote)
-    }
-
-    fun cleanDatabase() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Quotes")
-        jdbcTemplate.update("ALTER TABLE Quotes ALTER COLUMN id RESTART WITH 1")
     }
 
     @Test

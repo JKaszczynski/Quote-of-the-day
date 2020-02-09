@@ -1,5 +1,6 @@
 package com.jkaszczynski.quoteoftheday.services
 
+import com.jkaszczynski.quoteoftheday.clean
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
 import org.assertj.core.api.Assertions
@@ -25,14 +26,8 @@ class QuoteDaoTests(
 
     @BeforeEach
     fun persistQuote() {
-        cleanDatabase()
-        val quoteBasicInfo = QuoteBasicInfo(quoteText)
-        quoteDao.save(quoteBasicInfo)
-    }
-
-    fun cleanDatabase() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Quotes")
-        jdbcTemplate.update("ALTER TABLE Quotes ALTER COLUMN id RESTART WITH 1")
+        clean(jdbcTemplate, "Quotes")
+        quoteDao.save(QuoteBasicInfo(quoteText))
     }
 
     @Test

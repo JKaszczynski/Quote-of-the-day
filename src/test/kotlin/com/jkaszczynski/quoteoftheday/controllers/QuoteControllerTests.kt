@@ -1,7 +1,9 @@
 package com.jkaszczynski.quoteoftheday.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.jkaszczynski.quoteoftheday.clean
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -15,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class QuoteControllerTests(
@@ -24,6 +25,11 @@ class QuoteControllerTests(
         @Autowired
         private val jdbcTemplate: JdbcTemplate) {
 
+
+    @BeforeEach
+    fun cleanDatabase() {
+        clean(jdbcTemplate, "Quotes")
+    }
 
     @Test
     fun givenOneQuote_whenGetRequest_thenResponseWithQuote() {
