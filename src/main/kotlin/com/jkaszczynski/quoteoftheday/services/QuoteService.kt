@@ -24,13 +24,12 @@ class QuoteService(
 
     private fun getNewQuote(): QuoteBasicInfo {
         val quotesNeverDisplayed = quoteDao.getNotDisplayed()
-        val quote: QuoteBasicInfo
-        quote = if (quotesNeverDisplayed.isNotEmpty()) {
+        val quote = if (quotesNeverDisplayed.isNotEmpty()) {
             quotesNeverDisplayed[0]
         } else {
             quoteDao.getRandom()
         }
-        quoteDao.setDisplayDate(quote)
+        quoteDao.updateDisplayDate(quote)
         return quote
     }
 }

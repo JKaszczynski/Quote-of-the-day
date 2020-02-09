@@ -1,6 +1,5 @@
 package com.jkaszczynski.quoteoftheday.services
 
-import com.jkaszczynski.quoteoftheday.services.QuoteService
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

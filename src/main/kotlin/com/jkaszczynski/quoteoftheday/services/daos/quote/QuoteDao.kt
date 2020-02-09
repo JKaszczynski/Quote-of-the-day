@@ -68,7 +68,7 @@ class QuoteDao(
         entityManager.merge(quote)
     }
 
-    fun setDisplayDate(entity: QuoteBasicInfo) {
+    fun updateDisplayDate(entity: QuoteBasicInfo) {
         val quote = getQuote(entity.id)
         quote.displayedDate = LocalDate.now()
         entityManager.merge(quote)

@@ -74,7 +74,7 @@ class QuoteDaoTests(
     @Test
     fun givenNeverDisplayedQuote_whenDisplayed_thenSetDisplayDate() {
         val quotesBasicInfo = quoteDao.get(quoteId)
-        quoteDao.setDisplayDate(quotesBasicInfo)
+        quoteDao.updateDisplayDate(quotesBasicInfo)
         val updatedQuote = quoteDao.getQuote(quoteId)
 
         Assertions.assertThat(updatedQuote.displayedDate).isEqualTo(LocalDate.now())

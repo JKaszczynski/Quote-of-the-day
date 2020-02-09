@@ -3,7 +3,6 @@ package com.jkaszczynski.quoteoftheday.controllers
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.QuoteService
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
-import org.springframework.context.annotation.Role
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
