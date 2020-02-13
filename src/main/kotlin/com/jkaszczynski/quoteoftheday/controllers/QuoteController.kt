@@ -14,8 +14,9 @@ class QuoteController(
         private val quoteService: QuoteService,
         private val quoteDao: QuoteDao) {
 
+    @CrossOrigin
     @GetMapping
-    fun getQuote(): String {
+    fun getQuote(): QuoteBasicInfo {
         return quoteService.getTodayQuote()
     }
 

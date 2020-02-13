@@ -2,6 +2,7 @@ package com.jkaszczynski.quoteoftheday.services
 
 import com.jkaszczynski.quoteoftheday.cleanDatabase
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
+import com.jkaszczynski.quoteoftheday.entities.Quote
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -82,5 +83,28 @@ class QuoteDaoTests(
         Assertions.assertThat(quote.quote).isNotBlank()
     }
 
+    @Test
+    fun whenObtainingQuoteWithoutAuthor_thenAuthorAnonymous() {
+        val quote = quoteDao.getQuote(quoteId)
+        Assertions.assertThat(quote.author).isEqualTo(Quote.ANONYMOUS_AUTHOR)
+    }
+
+    @Test
+    fun givenQuoteWithAuthor_whenObtaining_thenReturnAuthor() {
+        cleanDatabase(jdbcTemplate, "Quotes")
+        val author = "author"
+        quoteDao.save(QuoteBasicInfo(quoteText, author, quoteId))
+        val quote = quoteDao.getQuote(quoteId)
+        Assertions.assertThat(quote.author).isEqualTo(author)
+    }
+
+    @Test
+    fun whenUpdatedAuthor_thenSuccessfullyUpdated() {
+        val author = "author"
+        val quoteBasicInfo = QuoteBasicInfo(quoteText, author, quoteId)
+        quoteDao.update(quoteBasicInfo)
+        val updated = quoteDao.get(quoteId)
+        Assertions.assertThat(updated.author).isEqualTo(author)
+    }
 
 }

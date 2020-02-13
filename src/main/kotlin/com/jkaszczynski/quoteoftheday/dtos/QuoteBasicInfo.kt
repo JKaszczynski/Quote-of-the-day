@@ -1,6 +1,7 @@
 package com.jkaszczynski.quoteoftheday.dtos
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.jkaszczynski.quoteoftheday.entities.Quote
 import javax.validation.constraints.NotEmpty
 
 class QuoteBasicInfo(
@@ -10,7 +11,10 @@ class QuoteBasicInfo(
     @JsonIgnore
     var id: Long = 0
 
-    constructor(quote: String, id: Long) : this(quote) {
+    var author: String = Quote.ANONYMOUS_AUTHOR
+
+    constructor(quote: String, author: String, id: Long) : this(quote) {
         this.id = id
+        this.author = author
     }
 }

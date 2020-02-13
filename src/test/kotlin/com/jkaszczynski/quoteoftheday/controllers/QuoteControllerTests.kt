@@ -33,13 +33,17 @@ class QuoteControllerTests(
 
     @Test
     fun givenOneQuote_whenGetRequest_thenResponseWithQuote() {
-        insertQuote()
+        val quote = "testQuote"
+        val author = "testAuthor"
+        insertQuote(quote, author)
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk)
+                .andExpect(jsonPath("$.quote").value(quote))
+                .andExpect(jsonPath("$.author").value(author))
     }
 
-    fun insertQuote() {
-        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?)", 1L, null, null, null, "quote")
+    fun insertQuote(quote: String, author: String) {
+        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?,?)", 1L, author, null, null, null, quote)
     }
 
     @Test

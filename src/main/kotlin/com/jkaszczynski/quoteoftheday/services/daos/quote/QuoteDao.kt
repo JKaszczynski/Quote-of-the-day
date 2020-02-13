@@ -28,9 +28,7 @@ class QuoteDao(
     }
 
     private fun asDto(quote: Quote): QuoteBasicInfo {
-        val quoteBasicInfo = QuoteBasicInfo(quote.quote)
-        quoteBasicInfo.id = quote.id
-        return quoteBasicInfo
+        return QuoteBasicInfo(quote.quote, quote.author, quote.id)
     }
 
     fun getByDisplayDate(date: LocalDate): List<QuoteBasicInfo> {
@@ -52,7 +50,7 @@ class QuoteDao(
 
     override fun save(entity: QuoteBasicInfo) {
         Assert.hasText(entity.quote, "Cannot persist quote with no text")
-        val newQuote = Quote(entity.quote)
+        val newQuote = Quote(entity.quote, entity.author)
         entityManager.persist(newQuote)
     }
 
@@ -65,6 +63,7 @@ class QuoteDao(
         Assert.hasText(entity.quote, "Cannot update quote if no text was provided")
         val quote = getQuote(entity.id)
         quote.quote = entity.quote
+        quote.author = entity.author
         entityManager.merge(quote)
     }
 

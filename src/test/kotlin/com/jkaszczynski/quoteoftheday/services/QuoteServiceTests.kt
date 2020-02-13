@@ -18,41 +18,42 @@ class QuoteServiceTests(
         private val jdbcTemplate: JdbcTemplate) {
 
     private val quoteText = "test"
+    private val quoteAuthor = "testAuthor"
 
     @BeforeEach
     fun persistQuote() {
         cleanDatabase(jdbcTemplate, "Quotes")
-        insertQuote(1L, quoteText, null)
+        insertQuote(1L, quoteText, quoteAuthor, null)
     }
 
-    private fun insertQuote(id: Long, quote: String, displayedDate: LocalDate?) {
-        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?)", id, null, displayedDate, null, quote)
+    private fun insertQuote(id: Long, quote: String, author: String, displayedDate: LocalDate?) {
+        jdbcTemplate.update("INSERT INTO Quotes VALUES(?,?,?,?,?,?)", id, author, null, displayedDate, null, quote)
     }
 
     @Test
     fun whenObtainingQuote_thenValueReturned() {
         val quote = quoteService.getTodayQuote()
-        Assertions.assertThat(quote).isNotBlank()
+        Assertions.assertThat(quote.quote).isNotBlank()
     }
 
     @Test
     fun givenNeverDisplayedQuote_whenObtainingQuote_thenQuoteReturned() {
-        val todayQuote = quoteService.getTodayQuote()
+        val todayQuote = quoteService.getTodayQuote().quote
         Assertions.assertThat(todayQuote).isEqualTo(quoteText)
     }
 
     @Test
     fun givenTwoQuotes_whenObtainingQuoteTwice_thenSameQuoteReturned() {
-        quoteService.getTodayQuote()
-        insertQuote(2L, "differentQuote", null)
-        val todayQuote = quoteService.getTodayQuote()
+        quoteService.getTodayQuote().quote
+        insertQuote(2L, "differentQuote", "differentAuthor", null)
+        val todayQuote = quoteService.getTodayQuote().quote
         Assertions.assertThat(todayQuote).isEqualTo(quoteText)
     }
 
     @Test
     fun givenAdditionalQuoteWithOldDate_whenObtainingQuote_newQuoteReturned() {
-        insertQuote(2L, "differentQuote", getYesterdayDate())
-        val todayQuote = quoteService.getTodayQuote()
+        insertQuote(2L, "differentQuote", "differentAuthor", getYesterdayDate())
+        val todayQuote = quoteService.getTodayQuote().quote
         Assertions.assertThat(todayQuote).isEqualTo(quoteText)
     }
 
@@ -63,9 +64,9 @@ class QuoteServiceTests(
     @Test
     fun givenTwoOldQuotes_whenObtainingQuote_thenOldQuoteReturned() {
         updateDateToDayBefore()
-        insertQuote(2L, "differentQuote", getYesterdayDate())
+        insertQuote(2L, "differentQuote", "differentAuthor", getYesterdayDate())
         val todayQuote = quoteService.getTodayQuote()
-        Assertions.assertThat(todayQuote).isNotBlank()
+        Assertions.assertThat(todayQuote.quote).isNotBlank()
     }
 
     private fun updateDateToDayBefore() {
@@ -74,9 +75,9 @@ class QuoteServiceTests(
 
     @Test
     fun whenObtainingQuoteAndThenDeletingFromDatabase_thenReturnQuoteFromCache() {
-        val beforeDeleting = quoteService.getTodayQuote()
+        val beforeDeleting = quoteService.getTodayQuote().quote
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "Quotes")
-        val quoteFromCache = quoteService.getTodayQuote()
+        val quoteFromCache = quoteService.getTodayQuote().quote
         Assertions.assertThat(quoteFromCache).isNotBlank()
         Assertions.assertThat(quoteFromCache).isEqualTo(beforeDeleting)
     }
