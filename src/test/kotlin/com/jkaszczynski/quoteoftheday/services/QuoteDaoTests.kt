@@ -1,6 +1,6 @@
 package com.jkaszczynski.quoteoftheday.services
 
-import com.jkaszczynski.quoteoftheday.clean
+import com.jkaszczynski.quoteoftheday.cleanDatabase
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import com.jkaszczynski.quoteoftheday.services.daos.quote.QuoteDao
 import org.assertj.core.api.Assertions
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.jdbc.JdbcTestUtils
 import java.lang.IllegalStateException
 import java.time.LocalDate
 
@@ -26,7 +25,7 @@ class QuoteDaoTests(
 
     @BeforeEach
     fun persistQuote() {
-        clean(jdbcTemplate, "Quotes")
+        cleanDatabase(jdbcTemplate, "Quotes")
         quoteDao.save(QuoteBasicInfo(quoteText))
     }
 

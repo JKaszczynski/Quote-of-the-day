@@ -1,7 +1,7 @@
 package com.jkaszczynski.quoteoftheday.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.jkaszczynski.quoteoftheday.clean
+import com.jkaszczynski.quoteoftheday.cleanDatabase
 import com.jkaszczynski.quoteoftheday.dtos.QuoteBasicInfo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +28,7 @@ class QuoteControllerTests(
 
     @BeforeEach
     fun cleanDatabase() {
-        clean(jdbcTemplate, "Quotes")
+        cleanDatabase(jdbcTemplate, "Quotes")
     }
 
     @Test

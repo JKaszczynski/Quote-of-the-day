@@ -1,12 +1,13 @@
 package com.jkaszczynski.quoteoftheday.services
 
-import com.jkaszczynski.quoteoftheday.clean
+import com.jkaszczynski.quoteoftheday.cleanDatabase
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.jdbc.JdbcTestUtils
 import java.time.LocalDate
 
 @SpringBootTest
@@ -20,7 +21,7 @@ class QuoteServiceTests(
 
     @BeforeEach
     fun persistQuote() {
-        clean(jdbcTemplate, "Quotes")
+        cleanDatabase(jdbcTemplate, "Quotes")
         insertQuote(1L, quoteText, null)
     }
 
@@ -69,5 +70,14 @@ class QuoteServiceTests(
 
     private fun updateDateToDayBefore() {
         jdbcTemplate.update("UPDATE Quotes SET displayed_date = ? WHERE id = 1L", getYesterdayDate())
+    }
+
+    @Test
+    fun whenObtainingQuoteAndThenDeletingFromDatabase_thenReturnQuoteFromCache() {
+        val beforeDeleting = quoteService.getTodayQuote()
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Quotes")
+        val quoteFromCache = quoteService.getTodayQuote()
+        Assertions.assertThat(quoteFromCache).isNotBlank()
+        Assertions.assertThat(quoteFromCache).isEqualTo(beforeDeleting)
     }
 }

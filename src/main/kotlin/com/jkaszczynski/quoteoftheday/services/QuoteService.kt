@@ -9,8 +9,26 @@ import java.time.LocalDate
 class QuoteService(
         private val quoteDao: QuoteDao
 ) {
+    private val quoteCache: HashMap<LocalDate, String> = HashMap()
+
     fun getTodayQuote(): String {
-        return getQuoteFromDatabase().quote
+        return getQuoteFromCache().ifEmpty {
+            clearCacheHistory()
+            addToCacheAndReturn(getQuoteFromDatabase())
+        }
+    }
+
+    private fun getQuoteFromCache(): String {
+        return quoteCache.getOrDefault(LocalDate.now(), "")
+    }
+
+    private fun clearCacheHistory() {
+        quoteCache.clear()
+    }
+
+    private fun addToCacheAndReturn(quoteBasicInfo: QuoteBasicInfo): String {
+        quoteCache[LocalDate.now()] = quoteBasicInfo.quote
+        return quoteBasicInfo.quote
     }
 
     private fun getQuoteFromDatabase(): QuoteBasicInfo {
