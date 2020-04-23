@@ -1,13 +1,17 @@
 import React from 'react';
+import {Route, BrowserRouter as Router} from 'react-router-dom'
 import './App.css';
-import Quote from './Quote'
+import {Quote} from './quote/Quote'
+import {Admin} from './admin/Admin'
+import {Login} from './admin/Login'
 
-export default class App extends React.Component {
-    render() {
-        return (
-            <div className='App'>
-                <Quote/>
-            </div>
-        );
-    }
-}
+export const App = () => (
+    <div className='App'>
+        <Router>
+            <Route exact path='/' component={Quote}/>
+            <Route exact path='/quote' component={Quote}/>
+            <Route exact path='/login' component={Login}/>
+            <Route path='/admin' component={Admin}/>
+        </Router>
+    </div>
+);
